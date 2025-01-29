@@ -1,0 +1,63 @@
+@page "/add-custom-packages"
+
+@attribute [Authorize]
+
+<PageTitle>Add Custom Package</PageTitle>
+<RadzenColumn SizeMD=12>
+    <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Custom Package</RadzenAlert>
+    <RadzenTemplateForm TItem="AT9.Models.AbstractTheatre.ProductVariation" Data="@productVariation" Visible="@(productVariation != null)" Submit="@FormSubmit">
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Name" Component="Name" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@productVariation.Name" Name="Name" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Description" Component="Description" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@productVariation.Description" Name="Description" />
+                <RadzenRequiredValidator Component="Description" Text="Description is required" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Price" Component="Price" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@productVariation.Price" Name="Price" />
+                <RadzenRequiredValidator Component="Price" Text="Price is required" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Stock" Component="Stock" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@productVariation.Stock" Name="Stock" />
+                <RadzenRequiredValidator Component="Stock" Text="Stock is required" />
+            </RadzenColumn>
+            <RadzenUpload Multiple="true" Accept="image/*" Change="@((args) => OnFileChange(args, "Image uploads only"))" />
+
+        </RadzenRow>
+        <div class="tile-container">
+            @foreach (var uploadedFile in UploadedFiles)
+            {
+                <div class="tile">
+                    @uploadedFile.FileName
+                    <img src="@BytetoImageBase64(uploadedFile.StreamData)">
+                </div>
+            }
+        </div>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat"  />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick" />
+        </RadzenStack>
+
+    </RadzenTemplateForm>
+
+</RadzenColumn>

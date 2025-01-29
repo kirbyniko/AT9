@@ -1,0 +1,100 @@
+@page "/profile-management"
+@using AT9.Models.AbstractTheatre
+
+@attribute [Authorize]
+
+<PageTitle>ProfileManagement</PageTitle>
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Profile Management" TextStyle="Radzen.Blazor.TextStyle.DisplayH4" class="gallery-header" />
+    </RadzenColumn>
+</RadzenRow>
+
+<RadzenRow>
+    @if (hasProfilePicture == false)
+    {
+        <RadzenImage class="profile-image" Path="images\Default_Profile_Pic.png" />
+    }
+    @if (hasProfilePicture == true)
+    {
+        <img class="profile-image" src="@BytetoImageBase64(ProfilePic.Image1)" />
+    }
+</RadzenRow>
+<RadzenRow class="profile-management-buttons">
+    <RadzenUpload class="upload-input" Multiple="false" Accept="image/*" Change="@((args) => OnFileChange(args, "Image uploads only"))" />
+    <RadzenButton class="save-button" Text="Save" Click="@SaveClick1"></RadzenButton>
+</RadzenRow>
+
+<RadzenRow class="profile-bio-row">
+    @if (isEditingBio == false)
+    {
+        <RadzenColumn class="bio-column">
+            <RadzenText Text="Bio:" />
+            <RadzenText Text="@Profile.Bio" class="bio-text"></RadzenText>
+        </RadzenColumn>
+        <RadzenButton class="edit-button" Text="Edit" Click="@EditSaveClick"></RadzenButton>
+    }
+    @if (isEditingBio == true)
+    {
+        <RadzenColumn class="bio-column">
+            <RadzenText Text="Bio:" />
+            <RadzenTextBox @bind-Value="@EditingBioText" class="bio-textbox"></RadzenTextBox>
+        </RadzenColumn>
+        <RadzenButton class="save-button" Text="Save" Click="@EditSaveClick"></RadzenButton>
+        <RadzenButton class="cancel-button" Text="Cancel" Click="@CancelClick"></RadzenButton>
+    }
+</RadzenRow>
+
+
+
+<RadzenRow class="profile-video-row">
+    @if (isEditingVideo == false)
+    {
+        <RadzenColumn class="video-column">
+            <RadzenText Text="Video Link:" />
+            <RadzenText Text="@VideoLink" class="video-text"></RadzenText>
+        </RadzenColumn>
+        <RadzenButton class="edit-button" Text="Edit" Click="@EditSaveVideoClick"></RadzenButton>
+    }
+    @if (isEditingVideo == true)
+    {
+        <RadzenColumn class="video-column">
+            <RadzenText Text="Video Link:" />
+            <RadzenTextBox @bind-Value="@VideoLink" class="video-textbox"></RadzenTextBox>
+        </RadzenColumn>
+        <RadzenButton class="save-button" Text="Save" Click="@EditSaveVideoClick"></RadzenButton>
+        <RadzenButton class="cancel-button" Text="Cancel" Click="@CancelVideoClick"></RadzenButton>
+    }
+</RadzenRow>
+<Products></Products>
+<GalleryImages></GalleryImages>
+<GalleryVideos></GalleryVideos>
+<CustomPackages></CustomPackages>
+Views Report:
+<RadzenDataGrid Data="@ReportViews1" TItem="AT9.Models.AbstractTheatre.ReportableView" AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" >
+    <Columns>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableView" Property="ArtworkName" Title="Art Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableView" Property="Date" Title="View Time"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableView" Property="IsVideo" Title="Video View?"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+Your Purchases:
+ <RadzenDataGrid Data="@Purchases" TItem="AT9.Models.AbstractTheatre.ReportableOrder" AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" >
+    <Columns>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Artname" Title="Product Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="PaymentMethod" Title="Payment Method"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="DeliveryAddress" Title="Delivery Address"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Total" Title="Total"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Date" Title="Date"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid> 
+Your Sales:
+<RadzenDataGrid Data="@Sales" TItem="AT9.Models.AbstractTheatre.ReportableOrder" AllowPaging="true" AllowSorting="true">
+    <Columns>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Artname" Title="Product Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Buyername" Title="Buyer Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Total" Title="Total"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ReportableOrder" Property="Date" Title="Date"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+

@@ -1,0 +1,41 @@
+@page "/video-views"
+
+@attribute [Authorize]
+<PageTitle>VideoViews</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="VideoViews" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@videoViews" TItem="AT9.Models.AbstractTheatre.VideoView" RowSelect="@EditRow">
+            <Columns>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.VideoView" Property="VideoViewId" Title="Video View Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.VideoView" Property="GalleryVideoId" Title="Gallery Video Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.VideoView" Property="ViewTime" Title="View Time">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.VideoView" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="videoView">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, videoView)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>

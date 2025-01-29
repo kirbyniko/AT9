@@ -1,0 +1,59 @@
+@page "/checkout"
+
+@attribute [Authorize]
+
+<PageTitle>Checkout</PageTitle>
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Checkout" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+    </RadzenColumn>
+</RadzenRow>
+
+<div class="checkout-order-summary-container">
+    <div class="checkout-order-summary-title">Order Summary</div>
+
+    @foreach (var group in PageProducts.GroupBy(p => p.ProductId))
+    {
+        var firstItem = group.First();
+        var quantity = group.Count();
+        var totalCost = (Math.Round((group.Sum(p => p.Price)), 2));
+        ;
+
+        <div class="checkout-order-item">
+            <img src="@firstItem.Imgdata" alt="@firstItem.Name" />
+            <div class="checkout-item-details">
+                <div class="checkout-item-name">@firstItem.Name</div>
+                <div class="checkout-item-description">@firstItem.Description</div>
+            </div>
+            <div class="checkout-item-quantity">x @quantity</div>
+            <div class="checkout-item-price">$@totalCost</div>
+        </div>
+    }
+
+    <div class="checkout-total-price">
+        <span class="checkout-total-label">Total:</span>
+        $@(Math.Round(PageProducts.Sum(p => p.Price), 2))
+    </div>
+</div>
+
+@if (paymentMethods.Count() > 0)
+{
+    <div>Select a payment method:</div>
+    <RadzenDropDown TValue="Models.AbstractTheatre.PaymentMethod" Data="@paymentMethods" TextProperty="Cardname" @bind-Value="@PaymentMethod" class="checkout-dropdown"></RadzenDropDown>
+
+}
+else
+{
+    <h1 @onclick="() => NavigateToPaymentMethods()">In order to make a purchase, you need a payment method. Click here to add one.</h1>
+}
+@if (deliveryAddresses.Count() > 0)
+{
+    <div>Select a delivery address:</div>
+
+    <RadzenDropDown TValue="Models.AbstractTheatre.DeliveryAddress" Data="@deliveryAddresses" TextProperty="Addresslineone" @bind-Value="@DeliveryAddress" class="checkout-dropdown"></RadzenDropDown>
+}
+else
+{
+    <h1 @onclick="() => NavigateToDeliveryAddresses()">In order to make a purchase, you need a delivery address. Click here to add one.</h1>
+}
+<RadzenButton Click="PlaceOrder" class="checkout-button">Place Order</RadzenButton>

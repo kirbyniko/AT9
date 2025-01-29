@@ -1,0 +1,207 @@
+@page "/shopping-page"
+
+@attribute [Authorize]
+
+<PageTitle>Shopping Page</PageTitle>
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Shopping Page"
+                    TextStyle="TextStyle.H1"
+                    TagName="TagName.H1"
+                    class="gallery-header" />
+    </RadzenColumn>
+</RadzenRow>
+
+<div class="products-per-page-container">
+    <label for="products-per-page" class="products-per-page-label">Products per page:</label>
+    <select id="products-per-page" class="products-per-page-select" @onchange="OnProductsPerPageChange">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+    </select>
+    <div style="float: right">
+    <RadzenTextBox @bind-Value="@Search" Style="float: right"></RadzenTextBox>
+    </div>
+    <RadzenButton Text="Search" Click="SearchFunction" Style="float: right"></RadzenButton>
+</div>
+
+<div class="sort-container">
+    <label for="sort-by" class="sort-label">Sort by:</label>
+    <select id="sort-by" class="sort-select" @onchange="OnSortByChange">
+        <option value="true">Price: Low to High</option>
+        <option value="false">Price: High to Low</option>
+    </select>
+</div>
+
+<!-- Price Range Slider -->
+<div class="price-range-container">
+    <label for="price-range" class="price-range-label">Price Range:</label>
+    <input type="range" id="min-price" min="@MinPrice" max="@MaxPrice" step="1"
+           @bind-value="@SelectedMinPrice" @oninput="OnMinPriceChange">
+    <span class="range-value">$@SelectedMinPrice</span>
+
+    <input type="range" id="max-price" min="@MinPrice" max="@MaxPrice" step="1"
+           @bind-value="@SelectedMaxPrice" @oninput="OnMaxPriceChange">
+    <span class="range-value">$@SelectedMaxPrice</span>
+</div>
+
+<div class="product-grid">
+    @foreach (var x in PageProducts)
+    {
+        <div class="product-tile" @onclick="() => NavigateToProduct(x.ProductId)">
+            <img src="@x.Imgdata" alt="@x.Name" class="product-image">
+            <div class="product-info">
+                <h3 class="product-name">@x.Name</h3>
+                <p class="product-price">$@x.Price</p>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="pagination">
+    @if (TotalPages > 1)
+    {
+        <button @onclick="() => ChangePage(CurrentPage - 1)" disabled="@(!HasPreviousPage)">Previous</button>
+        <span>Page @CurrentPage of @TotalPages</span>
+        <button @onclick="() => ChangePage(CurrentPage + 1)" disabled="@(!HasNextPage)">Next</button>
+    }
+</div>
+
+<style>
+    .gallery-header {
+        font-size: 3rem;
+        text-align: center;
+        margin: 40px 0;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .products-per-page-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .products-per-page-label {
+        font-size: 1em;
+        margin-right: 10px;
+        color: #333;
+    }
+
+    .products-per-page-select {
+        padding: 5px 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .products-per-page-select:focus {
+            outline: none;
+            border-color: #5bc0de;
+            box-shadow: 0 0 5px rgba(91, 192, 222, 0.5);
+        }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        justify-items: center;
+
+    }
+
+    .product-tile {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        text-align: center;
+        max-width: 250px;
+        width: 100%;
+    }
+
+        .product-tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 2px solid #f4f4f4;
+    }
+
+    .product-info {
+        padding: 10px;
+    }
+
+    .product-name {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 1.1em;
+        color: #d9534f;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+        .pagination button {
+            background-color: #5bc0de;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .pagination button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+
+        .pagination span {
+            align-self: center;
+            font-size: 1.1em;
+        }
+
+    .sort-container, .price-range-container {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sort-label, .price-range-label {
+        font-size: 1em;
+        color: #333;
+    }
+
+    .sort-select, .price-range-container input[type="range"] {
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .price-range-container .range-value {
+        font-size: 1em;
+        margin-left: 5px;
+    }
+</style>

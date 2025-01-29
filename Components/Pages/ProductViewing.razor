@@ -1,0 +1,72 @@
+@page "/product-viewing/{ID:int}"
+@page "/product-viewing/{ID:int}/{isCustom:bool}"
+
+@using AT9.Services
+@inject ILayoutNotifier LayoutNotifier
+
+@attribute [Authorize]
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="css/site.css" rel="stylesheet" />
+
+</head>
+
+
+<PageTitle>Product Viewing</PageTitle>
+<RadzenRow class="product-viewing-row">
+    <RadzenColumn Size="12">
+        <div class="product-viewing-container">
+            <!-- Product Image Section -->
+            <div class="product-image-section">
+                <RadzenCarousel @ref=carousel PagerOverlay="false" ButtonShade="Shade.Default" class="carousel-custom">
+                    <Items>
+                        @foreach (var image in AbstractImages)
+                        {
+                            <RadzenCarouselItem>
+                                <RadzenCard class="rz-w-75">
+                                    <img class="carousel-image" src="@BytetoImageBase64(image.Image1)">
+                                </RadzenCard>
+                            </RadzenCarouselItem>
+                        }
+                        @if (AbstractImages.Count() == 0)
+                        {
+                            <RadzenCarouselItem>
+                                <RadzenCard class="rz-w-75">
+                                    <img class="carousel-image" src="\images\Default_Product_Picture.png">
+                                </RadzenCard>
+                            </RadzenCarouselItem>
+                        }
+                    </Items>
+                </RadzenCarousel>
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="product-info-section">
+                <h1 class="product-title">@productVariation.Name</h1>
+                <h3 class="product-seller" @onclick="() => NavigateToProfile(Profile.ProfileId)">By @Profile.Username</h3>
+
+                <p class="product-description">@productVariation.Description</p>
+
+                <div class="product-price-stock">
+                    <p class="price">Price: $@productVariation.Price</p>
+                    <p class="stock">Stock: @productVariation.Stock</p>
+
+                    <div class="add-to-cart">
+                        <RadzenNumeric TValue="int" Style="width: 60px;" Max="@productVariation.Stock" Min="1" @bind-Value="@Amount"></RadzenNumeric>
+                        <RadzenButton Text="Add to Cart" Click="@AddtoCart"></RadzenButton>
+                    </div>
+
+                    <p class="total-cost">Total Cost: $@(Math.Round((productVariation.Price * Amount), 2))</p>
+                </div>
+
+                <div class="product-variation-dropdown">
+                    <RadzenDropDown TValue="Models.AbstractTheatre.ProductVariation" Data="@ProductVariations" @bind-Value="@productVariation" TextProperty="Name" SelectedItemChanged="@SelectedProductVariation"></RadzenDropDown>
+                </div>
+            </div>
+        </div>
+    </RadzenColumn>
+</RadzenRow>
+

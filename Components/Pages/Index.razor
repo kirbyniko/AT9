@@ -1,0 +1,52 @@
+@page "/"
+
+@attribute [Authorize]
+
+<PageTitle>Home</PageTitle>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ 
+
+ 
+    <link href="css/site.css" rel="stylesheet" />
+
+</head>
+
+<div class="hero-section-custom">
+    <div class="hero-content-custom">
+        <h1 class="hero-title-custom">Abstract Theatre</h1>
+        <p class="hero-description-custom">
+            Welcome to your one-stop shop and gallery for everything art! Upload art and track your views, buy and sell products!
+        </p>
+        <div class="hero-buttons-custom">
+            <button class="btn-primary-custom" @onclick="() => NavigateToShop()">Shop Now</button>
+            <button class="btn-secondary-custom" @onclick="() => NavigateToGallery()">View Gallery</button>
+        </div>
+    </div>
+</div>
+
+<RadzenRow Gap="5" RowGap="5" class="feature-section-custom">
+    <RadzenColumn @onclick="() => NavigateToShop()">
+        <div class="feature-tile-custom">
+            <img src="images/Shopping.png" alt="Shop" class="feature-image-custom" />
+            <h3 class="feature-title-custom">Shop</h3>
+            <p class="feature-description-custom">A wonderful selection of inspiring art awaits.</p>
+        </div>
+    </RadzenColumn>
+    <RadzenColumn @onclick="() => NavigateToGallery()">
+        <div class="feature-tile-custom">
+            <img src="images/Gallery.png" alt="Gallery" class="feature-image-custom" />
+            <h3 class="feature-title-custom">Gallery</h3>
+            <p class="feature-description-custom">An exquisite gallery of art.</p>
+        </div>
+    </RadzenColumn>
+    <RadzenColumn @onclick="() => NavigateToProfile()">
+        <div class="feature-tile-custom">
+            <img src="images/Profile.png" alt="Profile" class="feature-image-custom" />
+            <h3 class="feature-title-custom">Profile</h3>
+            <p class="feature-description-custom">Upload your own art, profile, and landing video!</p>
+        </div>
+    </RadzenColumn>
+</RadzenRow>
+

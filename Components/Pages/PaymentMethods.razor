@@ -1,0 +1,54 @@
+@page "/payment-methods"
+
+@attribute [Authorize]
+<PageTitle>Payment Methods</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Payment Methods" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@paymentMethods" TItem="AT9.Models.AbstractTheatre.PaymentMethod">
+            <Columns>
+ 
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Cardnumber" Title="Card Number">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Cardname" Title="Card Name">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Expiration" Title="Expiration">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Securitycode" Title="Security Code">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Fullname" Title="Full Name">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Zipcode" Title="Zip Code">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Addresslineone" Title="Address Line One">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="Addresslinetwo" Title="Address Line Two">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Property="City" Title="City">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.PaymentMethod" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="paymentMethod">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, paymentMethod)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>

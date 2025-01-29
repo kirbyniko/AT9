@@ -1,0 +1,56 @@
+@page "/shopping-cart"
+
+@attribute [Authorize]
+<PageTitle>Shopping Cart</PageTitle>
+<PageTitle>Shopping Cart</PageTitle>
+
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Shopping Cart"
+                    TextStyle="TextStyle.H1"
+                    TagName="TagName.H1"
+                    class="cart-page-header" />
+    </RadzenColumn>
+</RadzenRow>
+
+@if (PageProducts.Count() == 0)
+{
+    <h1>Your shopping cart is empty!</h1>
+}
+else
+{
+    @foreach (var groupedProduct in PageProducts.GroupBy(p => p.ProductVariationId))
+    {
+        var firstProduct = groupedProduct.First();
+        <div class="cart-item" id="product-@firstProduct.ProductVariationId">
+            <div class="cart-item-image">
+                <img src="@firstProduct.Imgdata" alt="@firstProduct.Name" />
+            </div>
+
+            <div class="cart-item-details">
+                <div class="cart-item-info">
+                    <h3>@firstProduct.Name</h3>
+                    <p>@firstProduct.Description</p>
+                </div>
+
+                <div class="cart-quantity-controls">
+                    <button class="quantity-button" @onclick="() => DecrementProduct(firstProduct.ProductVariationId)">-</button>
+                    <span class="cart-quantity">@groupedProduct.Count()</span>
+                    <button class="quantity-button" @onclick="() => IncrementProduct(firstProduct.ProductVariationId)">+</button>
+                </div>
+
+                <div class="cart-item-price">
+                    <p>Price: $@firstProduct.Price</p>
+                    <p>Total: $@(Math.Round((groupedProduct.Count() * firstProduct.Price), 2))</p>
+                </div>
+
+                <button class="remove-item-button" @onclick="() => RemoveProduct(firstProduct.ProductVariationId)">Remove</button>
+            </div>
+        </div>
+    }
+
+    <div class="cart-summary">
+        <h2>Total: $@Total</h2>
+        <RadzenButton Click="NavigateToCheckout" Text="Proceed to Checkout" class="proceed-checkout-button" />
+    </div>
+}

@@ -1,0 +1,17 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "kirbyniko123/radzen-app:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "5080",
+      "HostPort": "8080"
+    }
+  ]
+}
+dotnet --version
+
+dotnet --version
+

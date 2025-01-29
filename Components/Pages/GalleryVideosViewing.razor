@@ -1,0 +1,34 @@
+@page "/gallery-video-viewing"
+@page "/gallery-video-viewing/{ID:int}"
+
+
+@attribute [Authorize]
+
+<PageTitle>Gallery Viewing</PageTitle>
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <div class="gallery-view-container">
+            <!-- Video Section -->
+            <div class="landing-video">
+                <iframe src="@GalleryVideo.VideoLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="video-frame"></iframe>
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="product-info-section">
+                <!-- Product Title -->
+                <h1 class="product-title">@GalleryVideo.Name</h1>
+
+                <!-- Product Description -->
+                <p class="product-description">@GalleryVideo.Description</p>
+
+                <!-- Product Views and Creator Info -->
+                <div class="views-info">
+                    <p class="views-count">Views: @Views</p>
+                    <h3 class="creator-info" @onclick="() => NavigateToProfile(Profile.ProfileId)">
+                        By @Profile.Username
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </RadzenColumn>
+</RadzenRow>

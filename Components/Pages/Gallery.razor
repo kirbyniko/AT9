@@ -1,0 +1,251 @@
+@page "/gallery"
+@page "/gallery/{ID}"
+
+
+@attribute [Authorize]
+
+<PageTitle>Gallery</PageTitle>
+
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Gallery"
+                    TextStyle="TextStyle.H1"
+                    TagName="TagName.H1"
+                    class="gallery-header" />
+    </RadzenColumn>
+</RadzenRow>
+
+@* <div class="gallery-container">
+    @foreach (var x in PageProducts)
+    {
+        <div class="gallery-item" @onclick="() => NavigateToGalleryItem(x.GalleryImageId)">
+            <img src="@x.Imgdata" alt="@x.Name" class="gallery-item-image" />
+            <div class="gallery-item-name">@x.Name</div>
+        </div>
+    }
+</div> *@
+
+<div class="products-per-page-container">
+    <label for="products-per-page" class="products-per-page-label">Products per page:</label>
+    <select id="products-per-page" class="products-per-page-select" @onchange="OnProductsPerPageChange">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+    </select>
+</div>
+
+<div class="sort-container">
+    <label for="sort-by" class="sort-label">Sort by:</label>
+    <select id="sort-by" class="sort-select" @onchange="OnSortByChange">
+        <option value="true">Views: Low to High</option>
+        <option value="false">Views: High to Low</option>
+    </select>
+</div>
+
+
+<div class="product-grid">
+    @foreach (var x in GalleryItems)
+    {
+        @if (x.isVideo == true)
+        {
+            <div class="product-tile" @onclick="() => NavigateToGalleryVideo(x.ID)">
+                <img src="@x.Imgdata" alt="@x.Name" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">@x.Name</h3>
+                    <p class="product-price">Views: @x.Views</p>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="product-tile" @onclick="() => NavigateToGalleryItem(x.ID)">
+                <img src="@x.Imgdata" alt="@x.Name" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">@x.Name</h3>
+                    <p class="product-price">Views: @x.Views</p>
+                </div>
+            </div>
+        }
+    }
+    @if(GalleryItems.Count == 0){
+        <div>No Gallery Items Found</div>
+    }
+</div>
+
+
+<div class="pagination">
+    @if (TotalPages > 1)
+    {
+        <button @onclick="() => ChangePage(CurrentPage - 1)" disabled="@(!HasPreviousPage)">Previous</button>
+        <span>Page @CurrentPage of @TotalPages</span>
+        <button @onclick="() => ChangePage(CurrentPage + 1)" disabled="@(!HasNextPage)">Next</button>
+    }
+</div>
+
+<style>
+
+    .products-per-page-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .products-per-page-label {
+        font-size: 1em;
+        margin-right: 10px;
+        color: #333;
+    }
+
+    .products-per-page-select {
+        padding: 5px 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .products-per-page-select:focus {
+            outline: none;
+            border-color: #5bc0de;
+            box-shadow: 0 0 5px rgba(91, 192, 222, 0.5);
+        }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        justify-items: center;
+    }
+
+    .product-tile {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        text-align: center;
+        max-width: 250px;
+        width: 100%;
+    }
+
+        .product-tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 2px solid #f4f4f4;
+    }
+
+    .product-info {
+        padding: 10px;
+    }
+
+    .product-name {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 1.1em;
+        color: #d9534f;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+        .pagination button {
+            background-color: #5bc0de;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .pagination button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+
+        .pagination span {
+            align-self: center;
+            font-size: 1.1em;
+        }
+
+    .gallery-header {
+        font-size: 3rem;
+        text-align: center;
+        margin: 40px 0;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .gallery-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 15px;
+        padding: 20px;
+        margin-bottom: 50px;
+    }
+
+    .gallery-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        will-change: transform, box-shadow;
+    }
+
+        .gallery-item:hover {
+            transform: scale(1.05); 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
+        }
+
+    
+    .gallery-item-image {
+        width: 100%;
+        height: 250px; 
+        object-fit: cover;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-item-image {
+        transform: scale(1.1); 
+    }
+
+    .gallery-item-name {
+        font-size: 1.1rem;
+        margin: 15px 0;
+        color: #333;
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: capitalize;
+    }
+
+    
+</style>

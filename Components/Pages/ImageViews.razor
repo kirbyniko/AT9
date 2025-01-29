@@ -1,0 +1,41 @@
+@page "/image-views"
+
+@attribute [Authorize]
+<PageTitle>ImageViews</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="ImageViews" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@imageViews" TItem="AT9.Models.AbstractTheatre.ImageView" RowSelect="@EditRow">
+            <Columns>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ImageView" Property="ImageViewId" Title="Image View Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ImageView" Property="GalleryImageId" Title="Gallery Image Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ImageView" Property="ViewTime" Title="View Time">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AT9.Models.AbstractTheatre.ImageView" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="imageView">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, imageView)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>
